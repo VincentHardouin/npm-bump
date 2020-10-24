@@ -1,0 +1,25 @@
+#!/usr/bin/env bash 
+
+outdated_packages=$(npm outdated | tail -n +2)
+
+function commit_bump {
+    git add package.json package-lock.json && git commit -m "Bump ${1} from ${2} to ${3}"
+}
+
+function undo_changes {
+    git checkout package.json package-lock.json
+    npm install
+}
+
+while read package actual_version coll3 latest_version col5
+do 
+    echo "Try to bump ${package} from ${actual_version} to ${latest_version}"
+    npm install $package@$latest_version && npm test 
+
+    if [ $? -eq 0 ]; then
+    commit_bump $package $actual_version $latest_version
+    else
+    undo_changes
+    fi
+    
+done <<< "$outdated_packages"
