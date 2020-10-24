@@ -1,5 +1,6 @@
 #!/usr/bin/env bash 
 
+declare -a no_updated_packages
 outdated_packages=$(npm outdated | tail -n +2)
 
 function commit_bump {
@@ -19,7 +20,14 @@ do
     if [ $? -eq 0 ]; then
     commit_bump $package $actual_version $latest_version
     else
+    no_updated_packages+=(${package})
     undo_changes
     fi
     
 done <<< "$outdated_packages"
+
+echo "No updated packages :"
+for package in ${no_updated_packages[*]}
+do
+    printf "   %s\n" $package
+done
