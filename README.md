@@ -7,6 +7,13 @@ This script bump versions of packages that are not a problem.
 
 ## Installation 
 
+## With [Homebrew](https://brew.sh/)
+On OS X, you can install npm-bump via [Homebrew](https://brew.sh/):
+```bash 
+brew install vincenthardouin/npm-bump
+```
+
+## Classic method
 1. Clone repository 
 ```bash
 git clone git@github.com:VincentHardouin/npm-bump.git
