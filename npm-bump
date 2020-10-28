@@ -68,6 +68,15 @@ function show_no_updated_package {
   fi
 }
 
+function npm_files_exist {
+  if [[ ! -f ${PWD}/package.json ||  ! -f ${PWD}/package-lock.json ]]
+  then
+      echo "No package.json in directory"
+      exit 1
+  fi
+}
+
+npm_files_exist
 bump_version
 show_updated_packages
 show_no_updated_package
