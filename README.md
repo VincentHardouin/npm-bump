@@ -13,6 +13,12 @@ On OS X, you can install npm-bump via [Homebrew](https://brew.sh/):
 brew install vincenthardouin/npm-bump
 ```
 
+## With make
+
+```bash
+make install
+```
+
 ## Classic method
 1. Clone repository 
 ```bash
