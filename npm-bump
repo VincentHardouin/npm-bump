@@ -1,97 +1,94 @@
-#!/usr/bin/env bash 
+#!/usr/bin/env bash
 
 declare -a updated_packages
 declare -a old_version_packages
 declare -a new_version_packages
 declare -a no_updated_packages
 
-function handle_arguments {
+function handle_arguments() {
   while :; do
-      case $1 in
-          -h|-\?|--help)
-              show_help
-              exit
-              ;;
-          *)
-              break
-      esac
-      shift
+    case $1 in
+    -h | -\? | --help)
+      show_help
+      exit
+      ;;
+    *)
+      break
+      ;;
+    esac
+    shift
   done
 }
 
-function show_help {
-  printf "%s\n" "optional arguments:";
-  printf "  %-25s %s\n" "-h, --help" "show this help message and exit";
+function show_help() {
+  printf "%s\n" "optional arguments:"
+  printf "  %-25s %s\n" "-h, --help" "show this help message and exit"
 }
 
-function commit_bump {
-    git add package.json package-lock.json && git commit -m "Bump ${1} from ${2} to ${3}"
+function commit_bump() {
+  git add package.json package-lock.json && git commit -m "Bump ${1} from ${2} to ${3}"
 }
 
-function undo_changes {
-    git checkout package.json package-lock.json
-    npm install
+function undo_changes() {
+  git checkout package.json package-lock.json
+  npm install
 }
 
-function add_updated_package_informations {
-    updated_packages+=($1)
-    old_version_packages+=($2)
-    new_version_packages+=($3)
+function add_updated_package_informations() {
+  updated_packages+=($1)
+  old_version_packages+=($2)
+  new_version_packages+=($3)
 }
 
-function bump_version {
+function bump_version() {
   outdated_packages=$(npm outdated | tail -n +2)
 
   if [ -n "$outdated_packages" ]; then
-    while read package actual_version coll3 latest_version col5
-    do
-        echo "Try to bump ${package} from ${actual_version} to ${latest_version}"
-        npm install $package@$latest_version && npm test
+    while read package actual_version coll3 latest_version col5; do
+      echo "Try to bump ${package} from ${actual_version} to ${latest_version}"
+      npm install $package@$latest_version && npm test
 
-        if [ $? -eq 0 ]; then
-            commit_bump $package $actual_version $latest_version
-            add_updated_package_informations $package $actual_version $latest_version
-        else
-            no_updated_packages+=(${package})
-            undo_changes
-        fi
+      if [ $? -eq 0 ]; then
+        commit_bump $package $actual_version $latest_version
+        add_updated_package_informations $package $actual_version $latest_version
+      else
+        no_updated_packages+=(${package})
+        undo_changes
+      fi
 
-    done <<< "$outdated_packages"
+    done <<<"$outdated_packages"
   fi
 }
 
-function show_updated_packages {
+function show_updated_packages() {
   if [ ${#updated_packages[@]} -eq 0 ]; then
-      printf "\n\n%s\n" "No package updated"
+    printf "\n\n%s\n" "No package updated"
   else
-      printf "\n\n%s\n" "Updated packages :"
-      printf "\n%-15s %9s    %9s\n" "Package" "Old" "New"
-      printf "%.0s-" {1..38}
-      printf "\n"
+    printf "\n\n%s\n" "Updated packages :"
+    printf "\n%-15s %9s    %9s\n" "Package" "Old" "New"
+    printf "%.0s-" {1..38}
+    printf "\n"
 
-      for index in ${!updated_packages[*]}
-      do
-          printf "%-15s %9s    %9s\n" ${updated_packages[$index]} ${old_version_packages[$index]} ${new_version_packages[$index]}
-      done
+    for index in ${!updated_packages[*]}; do
+      printf "%-15s %9s    %9s\n" ${updated_packages[$index]} ${old_version_packages[$index]} ${new_version_packages[$index]}
+    done
   fi
   printf "\n"
 }
 
-function show_no_updated_package {
+function show_no_updated_package() {
   if [ ${#no_updated_packages[@]} -gt 0 ]; then
-      printf "\n%s\n" "Packages not updated :"
-      for package in ${no_updated_packages[*]}
-      do
-          printf "%s %s\n" "-" $package
-      done
+    printf "\n%s\n" "Packages not updated :"
+    for package in ${no_updated_packages[*]}; do
+      printf "%s %s\n" "-" $package
+    done
   fi
 }
 
-function npm_files_exist {
-  if [[ ! -f ${PWD}/package.json ||  ! -f ${PWD}/package-lock.json ]]
-  then
-      echo "No package.json in directory"
-      exit 1
+function npm_files_exist() {
+  if [[ ! -f ${PWD}/package.json || ! -f ${PWD}/package-lock.json ]]; then
+    echo "No package.json in directory"
+    exit 1
   fi
 }
 
