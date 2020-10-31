@@ -62,7 +62,7 @@ function bump_version() {
 
 function show_updated_packages() {
   if [ ${#updated_packages[@]} -eq 0 ]; then
-    printf "\n\n%s\n" "No package updated"
+    printf "%s\n" "No package updated"
   else
     printf "\n\n%s\n" "Updated packages :"
     printf "\n%-15s %9s    %9s\n" "Package" "Old" "New"
