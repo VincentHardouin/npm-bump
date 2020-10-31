@@ -5,6 +5,25 @@ declare -a old_version_packages
 declare -a new_version_packages
 declare -a no_updated_packages
 
+function handle_arguments {
+  while :; do
+      case $1 in
+          -h|-\?|--help)
+              show_help
+              exit
+              ;;
+          *)
+              break
+      esac
+      shift
+  done
+}
+
+function show_help {
+  printf "%s\n" "optional arguments:";
+  printf "  %-25s %s\n" "-h, --help" "show this help message and exit";
+}
+
 function commit_bump {
     git add package.json package-lock.json && git commit -m "Bump ${1} from ${2} to ${3}"
 }
@@ -76,6 +95,7 @@ function npm_files_exist {
   fi
 }
 
+handle_arguments "$@"
 npm_files_exist
 bump_version
 show_updated_packages
