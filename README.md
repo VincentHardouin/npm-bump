@@ -50,6 +50,13 @@ npm-bump
 ```
 And wait :hourglass: with :coffee:
 
+### Optional arguments
+
+```bash
+  -h, --help                show this help message and exit
+  -m, --markdown            display updated packages in markdown table
+``` 
+
 ## Features 
 - Script available globally 
 - Verify outdated package 
