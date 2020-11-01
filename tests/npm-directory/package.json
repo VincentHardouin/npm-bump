@@ -1,0 +1,15 @@
+{
+  "name": "already-updated",
+  "version": "1.0.0",
+  "description": "already-updated test directory",
+  "repository": "https://github.com/VincentHardouin/npm-bump",
+  "main": "index.js",
+  "scripts": {
+     "test": "exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.19"
+  }
+}
