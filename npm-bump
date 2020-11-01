@@ -4,6 +4,7 @@ declare -a updated_packages
 declare -a old_version_packages
 declare -a new_version_packages
 declare -a no_updated_packages
+markdown=0
 
 function handle_arguments() {
   while :; do
@@ -11,6 +12,10 @@ function handle_arguments() {
     -h | -\? | --help)
       show_help
       exit
+      ;;
+    -m | --mardown)
+      markdown=1
+      break
       ;;
     *)
       break
@@ -23,6 +28,7 @@ function handle_arguments() {
 function show_help() {
   printf "%s\n" "optional arguments:"
   printf "  %-25s %s\n" "-h, --help" "show this help message and exit"
+  printf "  %-25s %s\n" "-m, --markdown" "display updated packages in markdown table"
 }
 
 function commit_bump() {
@@ -61,19 +67,22 @@ function bump_version() {
 }
 
 function show_updated_packages() {
-  if [ ${#updated_packages[@]} -eq 0 ]; then
-    printf "%s\n" "No package updated"
-  else
-    printf "\n\n%s\n" "Updated packages :"
-    printf "\n%-15s %9s    %9s\n" "Package" "Old" "New"
-    printf "%.0s-" {1..38}
-    printf "\n"
-
-    for index in ${!updated_packages[*]}; do
-      printf "%-15s %9s    %9s\n" ${updated_packages[$index]} ${old_version_packages[$index]} ${new_version_packages[$index]}
-    done
-  fi
+  printf "\n\n%s\n" "Updated packages :"
+  printf "\n%-15s %9s    %9s\n" "Package" "Old" "New"
+  printf "%.0s-" {1..38}
   printf "\n"
+  for index in ${!updated_packages[*]}; do
+    printf "%-15s %9s    %9s\n" ${updated_packages[$index]} ${old_version_packages[$index]} ${new_version_packages[$index]}
+  done
+}
+
+function show_updated_packages_in_markdown() {
+  printf "\n\n%s\n" "Updated packages :"
+  printf "\n%s|%s|%s\n" "Package" "Old" "New"
+  printf "%s\n" "-|-|-"
+  for index in ${!updated_packages[*]}; do
+    printf "%s|%s|%s\n" "${updated_packages[$index]}" "${old_version_packages[$index]}" "${new_version_packages[$index]}"
+  done
 }
 
 function show_no_updated_package() {
@@ -95,5 +104,15 @@ function npm_files_exist() {
 handle_arguments "$@"
 npm_files_exist
 bump_version
-show_updated_packages
-show_no_updated_package
+if [ ${#updated_packages[@]} -eq 0 ]; then
+  printf "%s\n" "No package updated"
+else
+  printf "\n"
+  if [ $markdown -eq 0 ]; then
+    show_updated_packages
+  else
+    show_updated_packages_in_markdown
+  fi
+  printf "\n"
+  show_no_updated_package
+fi
