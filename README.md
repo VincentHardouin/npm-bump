@@ -2,8 +2,8 @@
 
 npm-bump is a Bash Script for bump npm version.
 
-It exists because task of update packages are frequently and boring.
-This script bump versions of packages that are not a problem.
+It exists because task of update packages are frequent and boring.
+This script bump versions of packages that have no tests issues.
 
 ## Installation 
 
@@ -62,6 +62,6 @@ And wait :hourglass: with :coffee:
 - Verify outdated package 
 - Use `npm install` instead of `npm update`
 - Try to install latest version of each package
-- Run `npm test` after each `npm install` for verify exit code
+- Run `npm test` after each `npm install` to verify exit code
 - Create bump commit for each package 
 - Show updated packages and packages not updated at the end
