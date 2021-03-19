@@ -55,6 +55,7 @@ And wait :hourglass: with :coffee:
 ```bash
   -h, --help                show this help message and exit
   -m, --markdown            display updated packages in markdown table
+  -e, --exclude             exclude package name seprated by a comma (e.g -e lodash,mocha)
 ``` 
 
 ## Features 
