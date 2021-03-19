@@ -25,7 +25,7 @@ directory_under_test='./npm-directory'
 expected_output="Package|Old|New
 -|-|-
 lodash|4.17.19|4.17.20"
-expected_commit_message="Bump lodash from 4.17.19 to 4.17.20"
+expected_commit_message="Bump lodash from 4.17.19 to 4.17.21"
 
 cd $directory_under_test || exit
 { npm install --quiet lodash@4.17.19  &> /dev/null; } 2>&1
