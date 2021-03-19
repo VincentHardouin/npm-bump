@@ -6,6 +6,20 @@ declare -a new_version_packages
 declare -a no_updated_packages
 markdown=0
 
+function transform_exclude_package_names() {
+  IFS=',' read -r -a array <<< "$exclude"
+  join="";
+  for index in "${!array[@]}"
+  do
+    if [ $index -eq 0 ]; then
+      join="(^| )${array[index]}( |$)"
+    else
+      join="${join}|(^| )${array[index]}( |$)"
+    fi
+  done
+  exclude="${join}"
+}
+
 function handle_arguments() {
   while :; do
     case $1 in
@@ -15,7 +29,11 @@ function handle_arguments() {
       ;;
     -m | --mardown)
       markdown=1
-      break
+      ;;
+    -e | --exclude)
+      shift
+      exclude=$1
+      transform_exclude_package_names
       ;;
     *)
       break
@@ -29,6 +47,7 @@ function show_help() {
   printf "%s\n" "optional arguments:"
   printf "  %-25s %s\n" "-h, --help" "show this help message and exit"
   printf "  %-25s %s\n" "-m, --markdown" "display updated packages in markdown table"
+  printf "  %-25s %s\n" "-e, --exclude" "exclude package name seprated by a comma (e.g -e lodash,mocha)"
 }
 
 function commit_bump() {
@@ -47,7 +66,11 @@ function add_updated_package_informations() {
 }
 
 function bump_version() {
-  outdated_packages=$(npm outdated | tail -n +2)
+  if [ -z ${exclude+x} ]; then
+    outdated_packages=$(npm outdated | tail -n +2)
+  else
+    outdated_packages=$(npm outdated | tail -n +2 | grep -Ev "$exclude")
+  fi
 
   if [ -n "$outdated_packages" ]; then
     while read package actual_version coll3 latest_version col5; do
