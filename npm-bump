@@ -35,6 +35,9 @@ function handle_arguments() {
       exclude=$1
       transform_exclude_package_names
       ;;
+    -nt | --no-test)
+      no_test=1
+      ;;
     *)
       break
       ;;
@@ -48,6 +51,7 @@ function show_help() {
   printf "  %-25s %s\n" "-h, --help" "show this help message and exit"
   printf "  %-25s %s\n" "-m, --markdown" "display updated packages in markdown table"
   printf "  %-25s %s\n" "-e, --exclude" "exclude package name seprated by a comma (e.g -e lodash,mocha)"
+  printf "  %-25s %s\n" "-nt, --no-test" "does not run test command when update package"
 }
 
 function commit_bump() {
@@ -75,7 +79,12 @@ function bump_version() {
   if [ -n "$outdated_packages" ]; then
     while read package actual_version coll3 latest_version col5; do
       echo "Try to bump ${package} from ${actual_version} to ${latest_version}"
-      npm install $package@$latest_version && npm test
+
+      if [ -z ${no_test} ]; then
+        npm install $package@$latest_version && npm test
+      else
+        npm install $package@$latest_version
+      fi
 
       if [ $? -eq 0 ]; then
         commit_bump $package $actual_version $latest_version
