@@ -56,6 +56,7 @@ And wait :hourglass: with :coffee:
   -h, --help                show this help message and exit
   -m, --markdown            display updated packages in markdown table
   -e, --exclude             exclude package name seprated by a comma (e.g -e lodash,mocha)
+  -nt, --no-test            does not run test command when update package
 ``` 
 
 ## Features 
