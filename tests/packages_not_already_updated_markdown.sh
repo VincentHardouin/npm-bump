@@ -4,14 +4,14 @@ function stub_npm_test() {
   replacement_text='"test": "exit 0"'
   file="$PWD/package.json"
   test_line=8
-  sed -i.bak "${test_line}s/.*/${replacement_text}/" $file && rm $file.bak
+  sed -i.bak "${test_line}s/.*/${replacement_text}/" "$file" && rm "$file".bak
 }
 
 function restore_npm_test() {
   replacement_text='     "test": "exit 1"'
   file="$PWD/package.json"
   test_line=8
-  sed -i.bak "${test_line}s/.*/${replacement_text}/" $file && rm $file.bak
+  sed -i.bak "${test_line}s/.*/${replacement_text}/" "$file" && rm "$file".bak
 }
 
 function remove_created_commit() {
