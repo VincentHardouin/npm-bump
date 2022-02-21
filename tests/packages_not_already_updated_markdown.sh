@@ -4,14 +4,14 @@ function stub_npm_test() {
   replacement_text='"test": "exit 0"'
   file="$PWD/package.json"
   test_line=8
-  sed -i.bak "${test_line}s/.*/${replacement_text}/" $file && rm $file.bak
+  sed -i.bak "${test_line}s/.*/${replacement_text}/" "$file" && rm "$file".bak
 }
 
 function restore_npm_test() {
   replacement_text='     "test": "exit 1"'
   file="$PWD/package.json"
   test_line=8
-  sed -i.bak "${test_line}s/.*/${replacement_text}/" $file && rm $file.bak
+  sed -i.bak "${test_line}s/.*/${replacement_text}/" "$file" && rm "$file".bak
 }
 
 function remove_created_commit() {
@@ -24,8 +24,8 @@ current_dir=$PWD
 directory_under_test='./npm-directory'
 expected_output="Package|Old|New
 -|-|-
-lodash|4.17.19|4.17.20"
-expected_commit_message="Bump lodash from 4.17.19 to 4.17.20"
+lodash|4.17.19|4.17.21"
+expected_commit_message="Bump lodash from 4.17.19 to 4.17.21"
 
 cd $directory_under_test || exit
 { npm install --quiet lodash@4.17.19  &> /dev/null; } 2>&1
