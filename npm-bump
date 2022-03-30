@@ -6,6 +6,12 @@ declare -a new_version_packages
 declare -a no_updated_packages
 markdown=0
 
+trap ctrl_c INT
+
+function ctrl_c() {
+  show_result
+}
+
 function transform_exclude_package_names() {
   IFS=',' read -r -a array <<< "$exclude"
   join="";
@@ -136,18 +142,22 @@ function npm_files_exist() {
   fi
 }
 
+function show_result() {
+  if [ ${#updated_packages[@]} -eq 0 ]; then
+    printf "%s\n" "No package updated"
+  else
+    printf "\n"
+    if [ $markdown -eq 0 ]; then
+      show_updated_packages
+    else
+      show_updated_packages_in_markdown
+    fi
+    printf "\n"
+    show_no_updated_package
+  fi
+}
+
 handle_arguments "$@"
 npm_files_exist
 bump_version
-if [ ${#updated_packages[@]} -eq 0 ]; then
-  printf "%s\n" "No package updated"
-else
-  printf "\n"
-  if [ $markdown -eq 0 ]; then
-    show_updated_packages
-  else
-    show_updated_packages_in_markdown
-  fi
-  printf "\n"
-  show_no_updated_package
-fi
+show_result
