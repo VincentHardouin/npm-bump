@@ -6,10 +6,12 @@ declare -a new_version_packages
 declare -a no_updated_packages
 markdown=0
 
-trap ctrl_c INT
+trap ctrl_c SIGINT
 
 function ctrl_c() {
+  git checkout .
   show_result
+  exit 0
 }
 
 function transform_exclude_package_names() {
