@@ -5,6 +5,8 @@ npm-bump is a Bash Script for bump npm version.
 It exists because task of update packages are frequent and boring.
 This script bump versions of packages that have no tests issues.
 
+https://user-images.githubusercontent.com/26384707/163569189-ea8f4706-76e4-4712-a87d-25d087410c10.mp4
+
 ## Installation 
 
 ### With [Homebrew](https://brew.sh/)
