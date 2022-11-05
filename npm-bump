@@ -46,6 +46,9 @@ function handle_arguments() {
     -nt | --no-test)
       no_test=1
       ;;
+    -sbs | --step-by-step)
+      step_by_step=1
+      ;;
     *)
       break
       ;;
@@ -60,6 +63,7 @@ function show_help() {
   printf "  %-25s %s\n" "-m, --markdown" "display updated packages in markdown table"
   printf "  %-25s %s\n" "-e, --exclude" "exclude package name seprated by a comma (e.g -e lodash,mocha)"
   printf "  %-25s %s\n" "-nt, --no-test" "does not run test command when update package"
+  printf "  %-25s %s\n" "-sbs, --step-by-step" "test bump version step by step"
 }
 
 function commit_bump() {
