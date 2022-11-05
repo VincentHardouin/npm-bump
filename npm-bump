@@ -35,7 +35,7 @@ function handle_arguments() {
       show_help
       exit
       ;;
-    -m | --mardown)
+    -m | --markdown)
       markdown=1
       ;;
     -e | --exclude)
