@@ -81,6 +81,31 @@ function add_updated_package_informations() {
   new_version_packages+=("$3")
 }
 
+function verlte() { printf '%s\n%s' "$1" "$2" | sort -C -V; }
+function verlt() { ! verlte "$2" "$1"; }
+
+function get_versions() {
+    read -r -d '\n' -a versions < <( npm view "$1" versions --json | awk -F "[,\n]" '!/\[|beta|alpha|rc|\]/ { gsub(/"/, "", $1); print $1}' | sort -V --reverse )
+}
+
+function filter_new_versions() {
+    for i in "${versions[@]}"
+    do
+        # shellcheck disable=SC2086
+        if verlt $1 $i; then
+            desc_newest_versions+=("$i")
+        else
+            break
+        fi
+    done
+}
+
+function get_newest_versions() {
+    get_versions "$1"
+    filter_new_versions "$2"
+    read -r -d '\n' -a newest_versions < <( printf '%s\n' "${desc_newest_versions[@]}" | sort -V )
+}
+
 function bump_version() {
   if [ -z ${exclude+x} ]; then
     outdated_packages=$(npm outdated | tail -n +2)
