@@ -56,16 +56,18 @@ And wait :hourglass: with :coffee:
 
 ```bash
   -h, --help                show this help message and exit
-  -m, --markdown            display updated packages in markdown table
+  -c, --command             run custom command after npm install and rollback install when given command exit code is > 0, not works with no-test option
   -e, --exclude             exclude package name seprated by a comma (e.g -e lodash,mocha)
+  -m, --markdown            display updated packages in markdown table
   -nt, --no-test            does not run test command when update package
+  -sbs, --step-by-step      test bump version step by step"
 ``` 
 
 ## Features 
 - Script available globally 
 - Verify outdated package 
 - Use `npm install` instead of `npm update`
-- Try to install latest version of each package
-- Run `npm test` after each `npm install` to verify exit code
+- Try to install latest version of each package, or try step-by-step with `--step-by-step` option
+- Run `npm test` after each `npm install` to verify exit code or given custom command with `--command` option
 - Create bump commit for each package 
 - Show updated packages and packages not updated at the end
