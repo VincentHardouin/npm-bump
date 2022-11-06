@@ -93,10 +93,12 @@ function verlte() { printf '%s\n%s' "$1" "$2" | sort -C -V; }
 function verlt() { ! verlte "$2" "$1"; }
 
 function get_versions() {
-    read -r -d '\n' -a versions < <( npm view "$1" versions --json | awk -F "[,\n]" '!/\[|beta|alpha|rc|\]/ { gsub(/"/, "", $1); print $1}' | sort -V --reverse )
+    unset versions
+    read -u 7 -r -d '\n' -a versions 7< <( npm view "$1" versions --json | awk -F "[,\n]" '!/\[|beta|alpha|rc|unstable|\]/ { gsub(/"/, "", $1); print $1}' | sort -V --reverse )
 }
 
 function filter_new_versions() {
+    unset desc_newest_versions
     for i in "${versions[@]}"
     do
         # shellcheck disable=SC2086
@@ -146,7 +148,7 @@ function bump_version() {
 
   if [ -n "$outdated_packages" ]; then
     # shellcheck disable=SC2034
-    while read -r package actual_version col3 latest_version col4; do
+    while read -u 9 -r package actual_version col3 latest_version col4; do
       if [ ${step_by_step} -eq 0 ]; then
         install_version "${package}" "${actual_version}" "${latest_version}"
       else
@@ -158,7 +160,7 @@ function bump_version() {
           fi
         done
       fi
-    done <<<"$outdated_packages"
+    done 9<<< "$outdated_packages"
   fi
 }
 
