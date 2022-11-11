@@ -94,7 +94,7 @@ function verlt() { ! verlte "$2" "$1"; }
 
 function get_versions() {
     unset versions
-    read -u 7 -r -d '\n' -a versions 7< <( npm view "$1" versions --json | awk -F "[,\n]" '!/\[|beta|alpha|rc|unstable|\]/ { gsub(/"/, "", $1); print $1}' | sort -V --reverse )
+    read -u 7 -r -d '\n' -a versions 7< <( npm view "$1" versions --json | awk -F "[,\n]" '!/\[|beta|alpha|rc|unstable|canary|\]/ { gsub(/"/, "", $1); print $1}' | sort -V --reverse )
 }
 
 function filter_new_versions() {
@@ -118,7 +118,7 @@ function get_newest_versions() {
 }
 
 function install_version() {
-    current_version=$(npm list --depth=0 | grep "$1@" | grep -E -o "(\d*.){3}$")
+    current_version=$(npm list --depth=0 | grep "$1@" | grep -E -o "@.*$" | sed "s/@//")
     echo "Try to bump $1 from $current_version to $2"
 
     if [ -n "${command}" ]; then
