@@ -118,7 +118,7 @@ function get_newest_versions() {
 }
 
 function install_version() {
-    current_version=$(npm list --depth=0 | grep " $1@" | grep -E -o "@.*$" | sed "s/@//")
+    current_version=$(npm list --depth=0 | grep " $1@" | grep -E -o "@([0-9]|\.)*$" | sed "s/@//")
     echo "Try to bump $1 from $current_version to $2"
 
     if [ -n "${command}" ]; then
